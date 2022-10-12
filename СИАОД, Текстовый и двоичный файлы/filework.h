@@ -4,12 +4,10 @@
 
 using namespace std;
 
-void createFile(string fileName)
+void createFile(string fileName, int lines)
 {
 	ofstream fout(fileName);
 	string str;
-	int lines;
-	cin >> lines;
 	cin.ignore();
 	for (size_t i = 0; i < lines; i++)
 	{
@@ -110,6 +108,7 @@ int countNumbers(string fileName) {
 	string line;
 	size_t pos = 0;
 	size_t count = 0;
+	string delim = " ";
 	int value = 0;
 	if (fin.is_open())
 	{
@@ -118,7 +117,7 @@ int countNumbers(string fileName) {
 			size_t pos = 0;
 			string token;
 			// ѕока строка содержит разделители
-			while (pos = line.find(" ") != string::npos)
+			while ((pos = line.find(delim)) != string::npos)
 			{
 				token = line.substr(0, pos); // —читываем строку до первого разделител€ = считываем "слово"
 				try // ѕроверка на то, что текущее "слово" €вл€етс€ числом
@@ -149,4 +148,54 @@ int countNumbers(string fileName) {
 	}
 	fin.close();
 	return count;
+}
+
+void threeInRow(string startFile, string endFile) {
+	string line = "";
+	int numbersInRow = 1;
+	int totalNumbers = 1;
+	bool isFirstString = true;
+	while (true)
+	{
+		try
+		{
+			if (numbersInRow == 4)
+			{
+				line += '\n';
+				if (isFirstString)
+				{
+					writeString(endFile, line);
+					isFirstString = false;
+				}
+				else
+				{
+					addString(endFile, line);
+				}
+				line = "";
+				numbersInRow = 1;
+			}
+			else
+			{
+
+				line += to_string(readNumber(startFile, totalNumbers)) + " ";
+				totalNumbers++;
+				numbersInRow++;
+			}
+		}
+		catch (const std::invalid_argument& e)
+		{
+			line += '\n';
+			if (isFirstString)
+			{
+				writeString(endFile, line);
+				isFirstString = false;
+			}
+			else
+			{
+				addString(endFile, line);
+			}
+			break;
+		}
+	}
+	
 }
